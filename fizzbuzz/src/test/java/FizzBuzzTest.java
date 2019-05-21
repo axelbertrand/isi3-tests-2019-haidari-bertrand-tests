@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class FizzBuzzTest {
 
     private FizzBuzz main;
+    private List<String> fizzBuzz;
 
+    @BeforeEach
+    void setUp() {
+        main = new FizzBuzz(100);
+        fizzBuzz = main.fizzBuzz();
+    }
 
     @ParameterizedTest
     @DisplayName("should have list of integer of size length")
@@ -28,102 +35,36 @@ class FizzBuzzTest {
     }
 
     @ParameterizedTest
-    @DisplayName("should display numbers according to rules")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzz(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        fizzBuzz.stream().forEach(System.out::println);
-        for(int i = 0; i < length; i++) {
-            if(i == 42) {
-                assertEquals("La grande question sur la vie, l'univers et le reste", fizzBuzz.get(i));
-            }
-            else if(i % 3 == 0) {
-                assertEquals("Fizz", fizzBuzz.get(i));
-            }
-            else if(i % 3 == 0 && i % 5 == 0) {
-                assertEquals("Fizz Buzz", fizzBuzz.get(i));
-            }
-            else if(i % 5 == 0) {
-                assertEquals("Buzz", fizzBuzz.get(i));
-            }
-            else if(i % 7 == 0) {
-                assertEquals("It's a trap", fizzBuzz.get(i));
-            }
-            else {
-                assertEquals(i, Integer.parseInt(fizzBuzz.get(i)));
-            }
-        }
-    }
-
-    @ParameterizedTest
     @DisplayName("should display \"Fizz\" for multiples of 3")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzzModulo3(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        for(int i  = 0; i < length; i++) {
-            if(i % 3 == 0 && i != 42) {
-                assertEquals("Fizz", fizzBuzz.get(i));
-            }
-        }
+    @ValueSource(ints = { 0, 3, 15, 21, 66, 99 })
+    void testFizzBuzzModulo3(int n) {
+        assertEquals("Fizz", fizzBuzz.get(n));
     }
 
     @ParameterizedTest
     @DisplayName("should display \"Buzz\" for multiples of 5")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzzModulo5(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        for(int i  = 0; i < length; i++) {
-            if(i % 5 == 0 && i % 3 != 0 && i % 7 != 0) {
-                assertEquals("Buzz", fizzBuzz.get(i));
-            }
-        }
+    @ValueSource(ints = { 5, 10, 25, 50, 70, 95 })
+    void testFizzBuzzModulo5(int n) {
+        assertEquals("Buzz", fizzBuzz.get(n));
     }
 
     @ParameterizedTest
-    @DisplayName("should display \"Fizz Buzz\" for multiples of 3 and 5")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzzModulo3and5(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        for(int i  = 0; i < length; i++) {
-            if(i % 3 == 0 && i % 5 == 0) {
-                assertEquals("Fizz Buzz", fizzBuzz.get(i));
-            }
-        }
+    @DisplayName("should display \"Fizz Buzz\" for multiples of 3 and 5 (should never happen because modulo 3 is before)")
+    @ValueSource(ints = { 0, 15, 45, 75 })
+    void testFizzBuzzModulo3and5(int n) {
+        assertNotEquals("Fizz Buzz", fizzBuzz.get(n));
     }
 
     @ParameterizedTest
     @DisplayName("should display \"It's a trap\" for multiples of 7")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzzModulo7(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        for(int i  = 0; i < length; i++) {
-            if(i % 7 == 0) {
-                assertEquals("It's a trap", fizzBuzz.get(i));
-            }
-        }
+    @ValueSource(ints = { 7, 14, 28, 49, 56, 77 })
+    void testFizzBuzzModulo7(int n) {
+        assertEquals("It's a trap", fizzBuzz.get(n));
     }
 
-    @ParameterizedTest
+    @Test
     @DisplayName("should display \"La grande question sur la vie, l'univers et le reste\" for 42")
-    @ValueSource(ints = { 0, 1, 10, 100 })
-    void testFizzBuzz42(int length) {
-        main = new FizzBuzz(length);
-
-        List<String> fizzBuzz = main.fizzBuzz();
-        for(int i  = 0; i < length; i++) {
-            if(i == 42) {
-                assertEquals("La grande question sur la vie, l'univers et le reste", fizzBuzz.get(i));
-            }
-        }
+    void testFizzBuzz42() {
+        assertEquals("La grande question sur la vie, l'univers et le reste", fizzBuzz.get(42));
     }
 }
