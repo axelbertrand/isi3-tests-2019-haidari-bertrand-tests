@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,11 +13,21 @@ class PersonTest {
     @Test
     @DisplayName("should call vector add function")
     void move() {
-        person = new Person("John Doe", new Vector(10, 20));
+        // On crée des versions factices de la classe Vector
+        Vector mockPosition = Mockito.mock(Vector.class);
+        Vector newMockPosition = Mockito.mock(Vector.class);
+        Vector returnedMockPosition = Mockito.mock(Vector.class);
 
-        person.move(new Vector(-5, 20));
-        person.move(new Vector(-3, -4));
+        // On utilise le mock pour instancier person
+        person = new Person("John Doe", mockPosition);
 
-        assertEquals(new Vector(2, 36), person.getPosition());
+        // On définie la valeur de retour de la fonction mockée
+        Mockito.when(mockPosition.add(newMockPosition)).thenReturn(returnedMockPosition);
+
+        // La fonctino à tester
+        person.move(newMockPosition);
+
+        // On vérifie que la méthode Vector.add a bien été appelée
+        Mockito.verify(mockPosition).add(newMockPosition);
     }
 }
